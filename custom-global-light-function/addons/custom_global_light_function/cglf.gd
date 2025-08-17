@@ -1,0 +1,31 @@
+@tool
+extends Control
+
+func _on_button_pressed() -> void:
+	var shader_files = _find_shader_files("res://")
+	
+	var counter: int = 0
+	for shader_file in shader_files:
+		var shader_file_resource = ResourceLoader.load(shader_file, "Shader", ResourceLoader.CACHE_MODE_REPLACE_DEEP)
+		if shader_file_resource is Shader:
+			counter += 1
+			var shader_code = shader_file_resource.code
+			shader_code += "HELLO, SHADER! GET RE-SHADED!"
+			shader_file_resource.code = shader_code
+			ResourceSaver.save(shader_file_resource)
+	print("\nCGLF: Added Custom Global Light Function to ", counter, " shaders!\n")
+
+func _find_shader_files(path: String) -> Array:
+	var results: Array = []
+	var dir = DirAccess.open(path)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if dir.current_is_dir():
+				results += _find_shader_files(path.path_join(file_name))
+			elif file_name.ends_with(".gdshader") or file_name.ends_with(".shader"):
+				results.append(path.path_join(file_name))
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	return results

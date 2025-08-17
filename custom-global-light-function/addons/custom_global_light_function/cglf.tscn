@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://b8d1f7wfft7ip"]
+[gd_scene load_steps=2 format=3 uid="uid://b8d1f7wfft7ip"]
+
+[ext_resource type="Script" uid="uid://bojfj581b74xs" path="res://addons/custom_global_light_function/cglf.gd" id="1_lu1kq"]
 
 [node name="CGLF" type="Control"]
 layout_mode = 3
@@ -7,3 +9,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_lu1kq")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "Find Shader files"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
