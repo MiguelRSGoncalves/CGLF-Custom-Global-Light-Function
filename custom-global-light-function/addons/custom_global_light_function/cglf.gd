@@ -9,11 +9,11 @@ func _on_button_pressed() -> void:
 		var shader_file_resource = ResourceLoader.load(shader_file, "Shader", ResourceLoader.CACHE_MODE_REPLACE_DEEP)
 		if shader_file_resource is Shader:
 			counter += 1
-			var shader_code = shader_file_resource.code
-			shader_code += "HELLO, SHADER! GET RE-SHADED!"
-			shader_file_resource.code = shader_code
+			var code = "HELLO, SHADER! GET RE-SHADED!"
+			shader_file_resource.code += "\n\n" + code
 			ResourceSaver.save(shader_file_resource)
 	print("\nCGLF: Added Custom Global Light Function to ", counter, " shaders!\n")
+	
 
 func _find_shader_files(path: String) -> Array:
 	var results: Array = []
