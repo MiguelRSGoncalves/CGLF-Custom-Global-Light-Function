@@ -17,4 +17,12 @@ offset_right = 8.0
 offset_bottom = 8.0
 text = "Find Shader files"
 
+[node name="Open CGLF Inc" type="Button" parent="."]
+layout_mode = 0
+offset_top = 41.0
+offset_right = 151.0
+offset_bottom = 72.0
+text = "Open CGLF Inc File"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Open CGLF Inc" to="." method="_open_cglf_inc"]

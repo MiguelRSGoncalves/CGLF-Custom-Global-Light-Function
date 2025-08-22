@@ -13,5 +13,7 @@ void fragment() {
 //	// Uncomment to replace the default light processing function with this one.
 //}
 
-//CGLF
+
+//CGLF - Custom Global Light Function
 #include "res://addons/custom_global_light_function/cglf.gdshaderinc"
+//CGLF
