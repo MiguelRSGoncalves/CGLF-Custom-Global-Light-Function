@@ -1,3 +1,5 @@
+/* CGLF Include File */
+
 void light() {
-	DIFFUSE_LIGHT += ATTENUATION;
+	
 }

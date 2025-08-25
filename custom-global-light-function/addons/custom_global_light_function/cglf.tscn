@@ -1,8 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://b8d1f7wfft7ip"]
+[gd_scene load_steps=5 format=3 uid="uid://b8d1f7wfft7ip"]
 
 [ext_resource type="Script" uid="uid://bojfj581b74xs" path="res://addons/custom_global_light_function/cglf.gd" id="1_lu1kq"]
 
-[node name="CGLF" type="Control"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lu1kq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_muodn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4lomg"]
+
+[node name="CGLF" type="Control" node_paths=PackedStringArray("_cglf_inc_path_text_window", "_ignore_blacklist_checkbox", "_replace_existing_light_functions_checkbox", "_blacklist", "_blacklist_input")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,19 +16,134 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_lu1kq")
+_cglf_inc_path_text_window = NodePath("VBoxContainer/CGLF Inc File Path/CGLF Inc Path Text Window")
+_ignore_blacklist_checkbox = NodePath("VBoxContainer/Update shaders Window/HFlowContainer/Ignore Blacklist")
+_replace_existing_light_functions_checkbox = NodePath("VBoxContainer/Update shaders Window/HFlowContainer/Replace Existing Light Functions2")
+_blacklist = NodePath("VBoxContainer/Blacklist/Blacklist Background/List")
+_blacklist_input = NodePath("VBoxContainer/Blacklist/HBoxContainer/Blacklist Input Shader File Path")
 
-[node name="Button" type="Button" parent="."]
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-text = "Find Shader files"
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
 
-[node name="Open CGLF Inc" type="Button" parent="."]
-layout_mode = 0
-offset_top = 41.0
-offset_right = 151.0
-offset_bottom = 72.0
-text = "Open CGLF Inc File"
+[node name="CGLF Inc File Path" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="Open CGLF Inc" to="." method="_open_cglf_inc"]
+[node name="CGLF Include File Title" type="RichTextLabel" parent="VBoxContainer/CGLF Inc File Path"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_lu1kq")
+bbcode_enabled = true
+text = "[b]CGLF Include File Path[/b]"
+fit_content = true
+scroll_active = false
+vertical_alignment = 2
+drag_and_drop_selection_enabled = false
+
+[node name="CGLF Inc Path Text Window" type="TextEdit" parent="VBoxContainer/CGLF Inc File Path"]
+layout_mode = 2
+placeholder_text = "CGLF Inc Path"
+emoji_menu_enabled = false
+scroll_fit_content_height = true
+
+[node name="Buttons" type="HBoxContainer" parent="VBoxContainer/CGLF Inc File Path"]
+layout_mode = 2
+
+[node name="Open File" type="Button" parent="VBoxContainer/CGLF Inc File Path/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Open File"
+text_overrun_behavior = 4
+
+[node name="Copy Path" type="Button" parent="VBoxContainer/CGLF Inc File Path/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Copy Path"
+text_overrun_behavior = 4
+
+[node name="Update shaders Window" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Update Shaders Title" type="RichTextLabel" parent="VBoxContainer/Update shaders Window"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_muodn")
+bbcode_enabled = true
+text = "[b]Update Shaders"
+fit_content = true
+scroll_active = false
+
+[node name="Update Shaders" type="Button" parent="VBoxContainer/Update shaders Window"]
+layout_mode = 2
+tooltip_text = "Injects the CGLF Include into all shaders.
+
+If you wish for a shader to not be affected, add it to the blacklist.
+
+An ERROR is thrown for each shader affected, this error is expected and will not cause any isue."
+text = "Update Shaders"
+text_overrun_behavior = 4
+
+[node name="HFlowContainer" type="VBoxContainer" parent="VBoxContainer/Update shaders Window"]
+layout_mode = 2
+
+[node name="Ignore Blacklist" type="CheckBox" parent="VBoxContainer/Update shaders Window/HFlowContainer"]
+layout_mode = 2
+tooltip_text = "Ignores Blacklist and updates all shaders in the proejct."
+action_mode = 0
+text = "Ignore Blacklist"
+text_overrun_behavior = 4
+
+[node name="Replace Existing Light Functions2" type="CheckBox" parent="VBoxContainer/Update shaders Window/HFlowContainer"]
+layout_mode = 2
+action_mode = 0
+text = "Replace Existing Light Functions"
+text_overrun_behavior = 4
+
+[node name="Blacklist" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Blacklist Title" type="RichTextLabel" parent="VBoxContainer/Blacklist"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_4lomg")
+bbcode_enabled = true
+text = "[b]Blacklist"
+fit_content = true
+scroll_active = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Blacklist"]
+layout_mode = 2
+
+[node name="Blacklist Input Shader File Path" type="TextEdit" parent="VBoxContainer/Blacklist/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Shader File Path"
+emoji_menu_enabled = false
+scroll_fit_content_height = true
+
+[node name="Add Blacklist Item" type="Button" parent="VBoxContainer/Blacklist/HBoxContainer"]
+layout_mode = 2
+text = "Add"
+
+[node name="Blacklist Background" type="Panel" parent="VBoxContainer/Blacklist"]
+clip_contents = true
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="List" type="ItemList" parent="VBoxContainer/Blacklist/Blacklist Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+auto_width = true
+
+[connection signal="text_changed" from="VBoxContainer/CGLF Inc File Path/CGLF Inc Path Text Window" to="." method="_on_cglf_inc_path_text_window_text_changed"]
+[connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Buttons/Open File" to="." method="_open_cglf_inc"]
+[connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Buttons/Copy Path" to="." method="_cglf_copy_path_pressed"]
+[connection signal="pressed" from="VBoxContainer/Update shaders Window/Update Shaders" to="." method="_update_shaders"]
+[connection signal="pressed" from="VBoxContainer/Blacklist/HBoxContainer/Add Blacklist Item" to="." method="_add_blacklist_item"]
