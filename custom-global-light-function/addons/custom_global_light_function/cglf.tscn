@@ -66,6 +66,11 @@ size_flags_horizontal = 3
 text = "Copy Path"
 text_overrun_behavior = 3
 
+[node name="Copy to Clipboard" type="Button" parent="VBoxContainer/CGLF Inc File Path"]
+layout_mode = 2
+text = "Copy Injection Code"
+text_overrun_behavior = 3
+
 [node name="Update shaders Window" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 
@@ -154,6 +159,7 @@ text_overrun_behavior = 3
 [connection signal="text_changed" from="VBoxContainer/CGLF Inc File Path/CGLF Inc Path Text Window" to="." method="_on_cglf_inc_path_text_window_text_changed"]
 [connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Buttons/Open File" to="." method="_open_cglf_inc"]
 [connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Buttons/Copy Path" to="." method="_cglf_copy_path_pressed"]
+[connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Copy to Clipboard" to="." method="_cglf_copy_boilerplate"]
 [connection signal="pressed" from="VBoxContainer/Update shaders Window/Update Shaders" to="." method="_update_shaders"]
 [connection signal="pressed" from="VBoxContainer/Blacklist/HBoxContainer/Add Blacklist Item" to="." method="_add_blacklist_item"]
 [connection signal="pressed" from="VBoxContainer/Blacklist/Remove Blacklisted Item" to="." method="_remove_blacklisted_item"]

@@ -24,7 +24,7 @@ func _update_shaders() -> void:
 	var shader_files = _find_shader_files("res://")
 	if shader_files.size() > 0:
 		push_warning("CGLF: The following ERRORS, one per shader file updated, are expected and are part of the inner works of the plugin! Didn't find a way to not make them appear :(")
-		var files_injected: int = _inject_custom_global_light_function(shader_files, _cglf_injection_path)
+		var files_injected: int = _inject_custom_global_light_function(shader_files)
 		if files_injected > 0:
 			print("CGLF: Added Custom Global Light Function to ", files_injected, " shaders!")
 		else:
@@ -47,7 +47,7 @@ func _find_shader_files(path: String) -> Array:
 		dir.list_dir_end()
 	return results
 
-func _inject_custom_global_light_function(shader_files: Array, code_injection_path: String) -> int:
+func _inject_custom_global_light_function(shader_files: Array, code_injection_path: String = _cglf_injection_path) -> int:
 	var counter: int = 0
 	for shader_file in shader_files:
 		if shader_file in _blacklisted_files && !_ignore_blacklist_checkbox.button_pressed: continue
@@ -88,6 +88,10 @@ func _open_cglf_inc():
 func _cglf_copy_path_pressed() -> void:
 	DisplayServer.clipboard_set(_cglf_injection_path)
 	print("CGLF : CGLF Include file path copied to clipboard!")
+	
+func _cglf_copy_boilerplate(code_injection_path: String = _cglf_injection_path):
+	DisplayServer.clipboard_set(_cglf_injection_boiler_plate + '#include "' + code_injection_path + '"' + _cglf_injection_boiler_plate_ending)
+	print("CGLF : CGLF Include file injection copied to clipboard!")
 
 func _on_cglf_inc_path_text_window_text_changed() -> void:
 	_cglf_injection_path = _cglf_inc_path_text_window.text
