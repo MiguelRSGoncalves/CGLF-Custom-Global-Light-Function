@@ -44,12 +44,10 @@ scroll_active = false
 vertical_alignment = 2
 drag_and_drop_selection_enabled = false
 
-[node name="CGLF Inc Path Text Window" type="TextEdit" parent="VBoxContainer/CGLF Inc File Path"]
+[node name="CGLF Inc Path Text Window" type="LineEdit" parent="VBoxContainer/CGLF Inc File Path"]
 layout_mode = 2
-text = "res://addons/custom_global_light_function/cglf.gdshaderinc"
 placeholder_text = "CGLF Inc Path"
 emoji_menu_enabled = false
-scroll_fit_content_height = true
 
 [node name="Buttons" type="HBoxContainer" parent="VBoxContainer/CGLF Inc File Path"]
 layout_mode = 2
@@ -122,7 +120,7 @@ scroll_active = false
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Blacklist"]
 layout_mode = 2
 
-[node name="Blacklist Input Shader File Path" type="TextEdit" parent="VBoxContainer/Blacklist/HBoxContainer"]
+[node name="Blacklist Input Shader File Path" type="LineEdit" parent="VBoxContainer/Blacklist/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Select a .gdshader file in the File Dock to automatically add the path to the Blacklist input text bar.
@@ -131,7 +129,6 @@ Or paste the file path into the input text bar. "
 text = "res://new_shader.gdshader"
 placeholder_text = "Select shader file in File Dock or paste shader file path"
 emoji_menu_enabled = false
-scroll_fit_content_height = true
 
 [node name="Add Blacklist Item" type="Button" parent="VBoxContainer/Blacklist/HBoxContainer"]
 layout_mode = 2
@@ -150,6 +147,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+item_count = 3
+item_0/text = "res://new_shader.gdshader"
+item_1/text = "res://test.gdshader"
+item_2/text = "res://test2.gdshader"
 
 [node name="Remove Blacklisted Item" type="Button" parent="VBoxContainer/Blacklist"]
 layout_mode = 2
@@ -161,5 +162,7 @@ text_overrun_behavior = 3
 [connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Buttons/Copy Path" to="." method="_cglf_copy_path_pressed"]
 [connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Copy to Clipboard" to="." method="_cglf_copy_boilerplate"]
 [connection signal="pressed" from="VBoxContainer/Update shaders Window/Update Shaders" to="." method="_update_shaders"]
+[connection signal="pressed" from="VBoxContainer/Update shaders Window/HFlowContainer/Ignore Blacklist" to="." method="_on_ignore_blacklist_pressed"]
+[connection signal="pressed" from="VBoxContainer/Update shaders Window/HFlowContainer/Replace Existing Light Functions2" to="." method="_on_replace_existing_light_functions_pressed"]
 [connection signal="pressed" from="VBoxContainer/Blacklist/HBoxContainer/Add Blacklist Item" to="." method="_add_blacklist_item"]
 [connection signal="pressed" from="VBoxContainer/Blacklist/Remove Blacklisted Item" to="." method="_remove_blacklisted_item"]

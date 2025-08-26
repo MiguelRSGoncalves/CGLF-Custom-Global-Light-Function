@@ -8,11 +8,11 @@ var _cglf_injection_boiler_plate: String = "\n\n//CGLF - Custom Global Light Fun
 var _cglf_injection_boiler_plate_ending: String = "\n//CGLF"
 
 @export_category("Nodes")
-@export var _cglf_inc_path_text_window : TextEdit = null
+@export var _cglf_inc_path_text_window : LineEdit = null
 @export var _ignore_blacklist_checkbox : CheckBox = null
 @export var _replace_existing_light_functions_checkbox : CheckBox = null
 @export var _blacklist : ItemList = null
-@export var _blacklist_input : TextEdit = null
+@export var _blacklist_input : LineEdit = null
 
 func _ready() -> void:
 	setup()
@@ -20,17 +20,18 @@ func _ready() -> void:
 	EditorInterface.get_file_system_dock().get_child(3).get_child(0).cell_selected.connect(_on_filesystemdock_file_selected)
 
 func setup():
+	if !ProjectSettings.has_setting("rendering/cglf/include_file_path") || !ProjectSettings.has_setting("rendering/cglf/ignore_blacklist") || !ProjectSettings.has_setting("rendering/cglf/replace_existing_light_functions") || !ProjectSettings.has_setting("rendering/cglf/blacklisted_items") : return
 	_cglf_injection_path = ProjectSettings.get_setting("rendering/cglf/include_file_path")
 	_cglf_inc_path_text_window.text = _cglf_injection_path
 	_ignore_blacklist_checkbox.button_pressed = ProjectSettings.get_setting("rendering/cglf/ignore_blacklist")
 	_replace_existing_light_functions_checkbox.button_pressed = ProjectSettings.get_setting("rendering/cglf/replace_existing_light_functions")
-	_blacklisted_files = ProjectSettings.get_setting("rendering/cglf/blacklist")
+	_blacklisted_files = ProjectSettings.get_setting("rendering/cglf/blacklisted_items")
 	_fill_blacklist_node()
 
 func _update_shaders() -> void:
 	var shader_files = _find_shader_files("res://")
 	if shader_files.size() > 0:
-		push_warning("CGLF: The following ERRORS, one per shader file updated, are expected and are part of the inner works of the plugin! Didn't find a way to not make them appear :(")
+		print("CGLF: The following ERRORS, one per shader file updated, are expected and are part of the inner works of the plugin! Didn't find a way to not make them appear :(")
 		var files_injected: int = _inject_custom_global_light_function(shader_files)
 		if files_injected > 0:
 			print("CGLF: Added Custom Global Light Function to ", files_injected, " shaders!")
@@ -98,14 +99,14 @@ func _inject_custom_global_light_function(shader_files: Array, code_injection_pa
 
 func _open_cglf_inc():
 	if not FileAccess.file_exists(_cglf_injection_path):
-		push_error("CGLF: Include file not found: %s" % _cglf_injection_path)
+		print("CGLF: Include file not found: %s" % _cglf_injection_path)
 		return
 	
 	var _cglf_injection = load(_cglf_injection_path)
 	if _cglf_injection:
 		EditorInterface.edit_resource(_cglf_injection)
 	else:
-		push_error("CGLF: Failed to load ShaderInclude resource at: %s" % _cglf_injection_path)
+		print("CGLF: Failed to load ShaderInclude resource at: %s" % _cglf_injection_path)
 		
 func _cglf_copy_path_pressed() -> void:
 	DisplayServer.clipboard_set(_cglf_injection_path)
@@ -115,29 +116,30 @@ func _cglf_copy_boilerplate(code_injection_path: String = _cglf_injection_path):
 	DisplayServer.clipboard_set(_cglf_injection_boiler_plate + '#include "' + code_injection_path + '"' + _cglf_injection_boiler_plate_ending)
 	print("CGLF : CGLF Include file injection copied to clipboard!")
 
-func _on_cglf_inc_path_text_window_text_changed() -> void:
-	_cglf_injection_path = _cglf_inc_path_text_window.text
-
 func _add_blacklist_item():
 	if _blacklist_input.text == "":
-		push_warning("CGLF: Blacklist input is empty! You cannot add what isn't there!")
+		print("CGLF: Blacklist input is empty! You cannot add what isn't there!")
 	elif  _blacklist_input.text in _blacklisted_files:
-		push_warning("CGLF: Shader file already blacklisted! You must really hate this one!!")
+		print("CGLF: Shader file already blacklisted! You must really hate this one!!")
 	elif(!FileAccess.file_exists(_blacklist_input.text)):
-		push_error("CGLF: Shader file doesnt exist! Try another path!")
+		print("CGLF: Shader file doesnt exist! Try another path!")
 	else:
 		_blacklisted_files.append(_blacklist_input.text)
 		_blacklist_input.clear()
 		_fill_blacklist_node()
+		ProjectSettings.set_setting("rendering/cglf/blacklisted_items", _blacklisted_files)
+		ProjectSettings.save()
 
 func _remove_blacklisted_item():
 	if _blacklist.get_selected_items().size() == 0:
-		push_warning("CGLF: No file selected to be removed! What exactly did you think would happen? :/")
+		print("CGLF: No file selected to be removed! What exactly did you think would happen? :/")
 		return
 	var removed_item = _blacklist.get_selected_items()[0]
 	var removed_item_path =  _blacklist.get_item_text(removed_item)
 	_blacklist.remove_item(removed_item)
 	_blacklisted_files.remove_at(_blacklisted_files.find(removed_item_path))
+	ProjectSettings.set_setting("rendering/cglf/blacklisted_items", _blacklisted_files)
+	ProjectSettings.save()
 
 func _fill_blacklist_node():
 	_blacklist.clear()
@@ -148,3 +150,16 @@ func _on_filesystemdock_file_selected():
 	var selected_file_path = EditorInterface.get_selected_paths()[0]
 	if(selected_file_path.contains(".gdshader") && !selected_file_path.contains(".gdshaderinc")):
 		_blacklist_input.text = EditorInterface.get_selected_paths()[0]
+
+func _on_cglf_inc_path_text_window_text_changed(new_text: String) -> void:
+	_cglf_injection_path = new_text
+	ProjectSettings.set_setting("rendering/cglf/include_file_path", _cglf_injection_path)
+	ProjectSettings.save()
+
+func _on_ignore_blacklist_pressed() -> void:
+	ProjectSettings.set_setting("rendering/cglf/ignore_blacklist", _ignore_blacklist_checkbox.button_pressed)
+	ProjectSettings.save()
+
+func _on_replace_existing_light_functions_pressed() -> void:
+	ProjectSettings.set_setting("rendering/cglf/replace_existing_light_functions", _ignore_blacklist_checkbox.button_pressed)
+	ProjectSettings.save()

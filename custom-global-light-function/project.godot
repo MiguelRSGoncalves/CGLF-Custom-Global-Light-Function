@@ -12,7 +12,6 @@ config_version=5
 
 config/name="CGLF-Custom-Global-Light-Function"
 config/features=PackedStringArray("4.4", "Forward Plus")
-config/icon="res://icon.svg"
 
 [editor_plugins]
 
@@ -20,4 +19,4 @@ enabled=PackedStringArray("res://addons/custom_global_light_function/plugin.cfg"
 
 [rendering]
 
-cglf/replace_existing_light_functions=true
+cglf/include_file_path="res://addons/custom_global_light_function/cglf.gd"
