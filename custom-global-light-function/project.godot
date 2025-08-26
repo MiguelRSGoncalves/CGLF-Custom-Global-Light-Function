@@ -17,3 +17,7 @@ config/icon="res://icon.svg"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/custom_global_light_function/plugin.cfg")
+
+[rendering]
+
+cglf/replace_existing_light_functions=true

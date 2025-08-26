@@ -15,10 +15,17 @@ var _cglf_injection_boiler_plate_ending: String = "\n//CGLF"
 @export var _blacklist_input : TextEdit = null
 
 func _ready() -> void:
-	_cglf_inc_path_text_window.text = _cglf_injection_path
-	_fill_blacklist_node()
+	setup()
 	# LOOKOUT FOR CHANGE ON GODOT VERSION TO SEE IF THEY EXPOSE THE SIGNAL WRITTEN BELLOW
 	EditorInterface.get_file_system_dock().get_child(3).get_child(0).cell_selected.connect(_on_filesystemdock_file_selected)
+
+func setup():
+	_cglf_injection_path = ProjectSettings.get_setting("rendering/cglf/include_file_path")
+	_cglf_inc_path_text_window.text = _cglf_injection_path
+	_ignore_blacklist_checkbox.button_pressed = ProjectSettings.get_setting("rendering/cglf/ignore_blacklist")
+	_replace_existing_light_functions_checkbox.button_pressed = ProjectSettings.get_setting("rendering/cglf/replace_existing_light_functions")
+	_blacklisted_files = ProjectSettings.get_setting("rendering/cglf/blacklist")
+	_fill_blacklist_node()
 
 func _update_shaders() -> void:
 	var shader_files = _find_shader_files("res://")
