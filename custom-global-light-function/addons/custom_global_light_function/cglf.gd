@@ -2,7 +2,7 @@
 extends Control
 
 var _cglf_injection_path: String = "res://addons/custom_global_light_function/cglf.gdshaderinc"
-var _blacklisted_files: Array[String] = []
+var _blacklisted_files: PackedStringArray = []
 
 var _cglf_injection_boiler_plate: String = "\n\n//CGLF - Custom Global Light Function\n"
 var _cglf_injection_boiler_plate_ending: String = "\n//CGLF"
@@ -54,8 +54,23 @@ func _inject_custom_global_light_function(shader_files: Array, code_injection_pa
 		var shader_file_resource = ResourceLoader.load(shader_file, "Shader", ResourceLoader.CACHE_MODE_IGNORE_DEEP)
 		if shader_file_resource is Shader:
 			var code: String = shader_file_resource.code
+			
+			# Skip file if it has a light func and replace_existing_light_func is OFF
+			var light_func_regex := RegEx.new()
+			light_func_regex.compile(r"(?ms)^[ \t\r\n]*void[ \t]+light\s*\([^)]*\)\s*\{.*?\}[ \t\r\n]*")
+			var has_light_func = light_func_regex.search(code)
+			if has_light_func && !_replace_existing_light_functions_checkbox.button_pressed: continue
+			
+			var commented_light_func_regex := RegEx.new()
+			commented_light_func_regex.compile(r"(?ms)^[ \t\r\n]*//[ \t]*void[ \t]+light\s*\([^)]*\)\s*\{.*?\}[ \t\r\n]*")
+			code = commented_light_func_regex.sub(code, "", true)
+			
+			if has_light_func && _replace_existing_light_functions_checkbox.button_pressed:
+				code = light_func_regex.sub(code, "", true)
+			
+			# Checks for already injected CGLF
 			var boilerplate_regex := RegEx.new()
-			boilerplate_regex.compile("//CGLF - Custom Global Light Function\\n#include \".*\"\\n//CGLF")
+			boilerplate_regex.compile(_cglf_injection_boiler_plate + '#include ".*"' + _cglf_injection_boiler_plate_ending)
 			if boilerplate_regex.search(code):
 				var include_regex := RegEx.new()
 				include_regex.compile('#include ".*"')
@@ -101,13 +116,12 @@ func _add_blacklist_item():
 		push_warning("CGLF: Blacklist input is empty! You cannot add what isn't there!")
 	elif  _blacklist_input.text in _blacklisted_files:
 		push_warning("CGLF: Shader file already blacklisted! You must really hate this one!!")
-		return
 	elif(!FileAccess.file_exists(_blacklist_input.text)):
 		push_error("CGLF: Shader file doesnt exist! Try another path!")
-		return
-	_blacklisted_files.append(_blacklist_input.text)
-	_blacklist_input.clear()
-	_fill_blacklist_node()
+	else:
+		_blacklisted_files.append(_blacklist_input.text)
+		_blacklist_input.clear()
+		_fill_blacklist_node()
 
 func _remove_blacklisted_item():
 	if _blacklist.get_selected_items().size() == 0:
