@@ -46,6 +46,7 @@ drag_and_drop_selection_enabled = false
 
 [node name="CGLF Inc Path Text Window" type="TextEdit" parent="VBoxContainer/CGLF Inc File Path"]
 layout_mode = 2
+text = "res://addons/custom_global_light_function/cglf.gdshaderinc"
 placeholder_text = "CGLF Inc Path"
 emoji_menu_enabled = false
 scroll_fit_content_height = true
@@ -57,13 +58,13 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Open File"
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
 [node name="Copy Path" type="Button" parent="VBoxContainer/CGLF Inc File Path/Buttons"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Copy Path"
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
 [node name="Update shaders Window" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -84,7 +85,7 @@ If you wish for a shader to not be affected, add it to the blacklist.
 
 An ERROR is thrown for each shader affected, this error is expected and will not cause any isue."
 text = "Update Shaders"
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
 [node name="HFlowContainer" type="VBoxContainer" parent="VBoxContainer/Update shaders Window"]
 layout_mode = 2
@@ -94,13 +95,13 @@ layout_mode = 2
 tooltip_text = "Ignores Blacklist and updates all shaders in the proejct."
 action_mode = 0
 text = "Ignore Blacklist"
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
 [node name="Replace Existing Light Functions2" type="CheckBox" parent="VBoxContainer/Update shaders Window/HFlowContainer"]
 layout_mode = 2
 action_mode = 0
 text = "Replace Existing Light Functions"
-text_overrun_behavior = 4
+text_overrun_behavior = 3
 
 [node name="Blacklist" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -119,7 +120,11 @@ layout_mode = 2
 [node name="Blacklist Input Shader File Path" type="TextEdit" parent="VBoxContainer/Blacklist/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Shader File Path"
+tooltip_text = "Select a .gdshader file in the File Dock to automatically add the path to the Blacklist input text bar.
+
+Or paste the file path into the input text bar. "
+text = "res://test.gdshader"
+placeholder_text = "Select shader file in File Dock or paste shader file path"
 emoji_menu_enabled = false
 scroll_fit_content_height = true
 
@@ -140,10 +145,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-auto_width = true
+
+[node name="Remove Blacklisted Item" type="Button" parent="VBoxContainer/Blacklist"]
+layout_mode = 2
+text = "Remove"
+text_overrun_behavior = 3
 
 [connection signal="text_changed" from="VBoxContainer/CGLF Inc File Path/CGLF Inc Path Text Window" to="." method="_on_cglf_inc_path_text_window_text_changed"]
 [connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Buttons/Open File" to="." method="_open_cglf_inc"]
 [connection signal="pressed" from="VBoxContainer/CGLF Inc File Path/Buttons/Copy Path" to="." method="_cglf_copy_path_pressed"]
 [connection signal="pressed" from="VBoxContainer/Update shaders Window/Update Shaders" to="." method="_update_shaders"]
 [connection signal="pressed" from="VBoxContainer/Blacklist/HBoxContainer/Add Blacklist Item" to="." method="_add_blacklist_item"]
+[connection signal="pressed" from="VBoxContainer/Blacklist/Remove Blacklisted Item" to="." method="_remove_blacklisted_item"]

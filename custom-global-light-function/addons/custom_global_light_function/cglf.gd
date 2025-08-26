@@ -17,13 +17,18 @@ var _cglf_injection_boiler_plate_ending: String = "\n//CGLF"
 func _ready() -> void:
 	_cglf_inc_path_text_window.text = _cglf_injection_path
 	_fill_blacklist_node()
+	# LOOKOUT FOR CHANGE ON GODOT VERSION TO SEE IF THEY EXPOSE THE SIGNAL WRITTEN BELLOW
+	EditorInterface.get_file_system_dock().get_child(3).get_child(0).cell_selected.connect(_on_filesystemdock_file_selected)
 
 func _update_shaders() -> void:
 	var shader_files = _find_shader_files("res://")
 	if shader_files.size() > 0:
 		push_warning("CGLF: The following ERRORS, one per shader file updated, are expected and are part of the inner works of the plugin! Didn't find a way to not make them appear :(")
 		var files_injected: int = _inject_custom_global_light_function(shader_files, _cglf_injection_path)
-		print("CGLF: Added Custom Global Light Function to ", files_injected, " shaders!")
+		if files_injected > 0:
+			print("CGLF: Added Custom Global Light Function to ", files_injected, " shaders!")
+		else:
+			print("CGLF: OOOPS... No shaders were updated!")
 	else:
 		print("CGLF: No shaders files found! Go create some!")
 
@@ -45,6 +50,7 @@ func _find_shader_files(path: String) -> Array:
 func _inject_custom_global_light_function(shader_files: Array, code_injection_path: String) -> int:
 	var counter: int = 0
 	for shader_file in shader_files:
+		if shader_file in _blacklisted_files && !_ignore_blacklist_checkbox.button_pressed: continue
 		var shader_file_resource = ResourceLoader.load(shader_file, "Shader", ResourceLoader.CACHE_MODE_IGNORE_DEEP)
 		if shader_file_resource is Shader:
 			var code: String = shader_file_resource.code
@@ -87,17 +93,33 @@ func _on_cglf_inc_path_text_window_text_changed() -> void:
 	_cglf_injection_path = _cglf_inc_path_text_window.text
 
 func _add_blacklist_item():
-	if _blacklist_input.text in _blacklisted_files:
+	if _blacklist_input.text == "":
+		push_warning("CGLF: Blacklist input is empty! You cannot add what isn't there!")
+	elif  _blacklist_input.text in _blacklisted_files:
 		push_warning("CGLF: Shader file already blacklisted! You must really hate this one!!")
 		return
-	if(!FileAccess.file_exists(_blacklist_input.text)):
+	elif(!FileAccess.file_exists(_blacklist_input.text)):
 		push_error("CGLF: Shader file doesnt exist! Try another path!")
 		return
 	_blacklisted_files.append(_blacklist_input.text)
 	_blacklist_input.clear()
 	_fill_blacklist_node()
 
+func _remove_blacklisted_item():
+	if _blacklist.get_selected_items().size() == 0:
+		push_warning("CGLF: No file selected to be removed! What exactly did you think would happen? :/")
+		return
+	var removed_item = _blacklist.get_selected_items()[0]
+	var removed_item_path =  _blacklist.get_item_text(removed_item)
+	_blacklist.remove_item(removed_item)
+	_blacklisted_files.remove_at(_blacklisted_files.find(removed_item_path))
+
 func _fill_blacklist_node():
 	_blacklist.clear()
 	for item in _blacklisted_files:
 		_blacklist.add_item(item)
+
+func _on_filesystemdock_file_selected():
+	var selected_file_path = EditorInterface.get_selected_paths()[0]
+	if(selected_file_path.contains(".gdshader") && !selected_file_path.contains(".gdshaderinc")):
+		_blacklist_input.text = EditorInterface.get_selected_paths()[0]
