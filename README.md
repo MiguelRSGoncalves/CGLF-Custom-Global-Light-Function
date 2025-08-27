@@ -2,11 +2,18 @@
 
 Provides a manager to define and customize a single centralized custom global light() function shared across all or chosen shaders in the project.
 
+## Why use this plugin?
+
+- Development friendly manager to keep consistent lighting throughout your project. No more copy and paste nightmares!
+- Change your lighting logic in one place and it automatically updates on all shaders files!
+- No extra resources cost for running screen-space lighting logic.
+
 ## Features
 - Define a global `light()` function once and reuse it everywhere.
 - Easily managed through the plugin dock.
 - Optionally replace existing `light()` functions automatically.
 - Blacklist for shader files not meant to be affected by CGLF.
+- Currently only .gdshader files are supported.
 
 ## Installation
 
@@ -32,3 +39,9 @@ Provides a manager to define and customize a single centralized custom global li
    	- **Ignore Blacklist** → Ignores the blacklist rule while updating shader files.
    	- **Replace Existing Light Functions** → Automatically replaces `light()` functions already present in shaders.
    	- **Blacklist** → List of shaders to exclude.
+
+## Planned Future Additions
+
+- Add support for in-scene saved Shaders
+- Add support to Materials
+- Add support to visual shaders
