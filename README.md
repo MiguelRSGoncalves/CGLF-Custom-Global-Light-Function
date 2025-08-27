@@ -6,7 +6,7 @@ Provides a manager to define and customize a single centralized custom global li
 
 - Development friendly manager to keep consistent lighting throughout your project. No more copy and paste nightmares!
 - Change your lighting logic in one place and it automatically updates on all shaders files!
-- No extra resources cost for running screen-space lighting logic.
+- No extra resources cost for running screen-space lighting logic. More FPS, more happiness!
 
 ## Features
 - Define a global `light()` function once and reuse it everywhere.
