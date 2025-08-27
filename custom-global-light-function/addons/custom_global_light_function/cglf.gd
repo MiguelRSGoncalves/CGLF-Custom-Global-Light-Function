@@ -16,7 +16,7 @@ var _cglf_injection_boiler_plate_ending: String = "\n//CGLF"
 
 func _ready() -> void:
 	setup()
-	# LOOKOUT FOR CHANGE ON GODOT VERSION TO SEE IF THEY EXPOSE THE SIGNAL WRITTEN BELLOW
+	# LOOKOUT FOR CHANGE PULL REQUEST https://github.com/godotengine/godot/pull/107275 TO SEE IF THEY EXPOSE THE SIGNAL WRITTEN BELLOW
 	EditorInterface.get_file_system_dock().get_child(3).get_child(0).cell_selected.connect(_on_filesystemdock_file_selected)
 
 func setup():
