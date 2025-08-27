@@ -150,6 +150,8 @@ func _on_filesystemdock_file_selected():
 	var selected_file_path = EditorInterface.get_selected_paths()[0]
 	if(selected_file_path.contains(".gdshader") && !selected_file_path.contains(".gdshaderinc")):
 		_blacklist_input.text = EditorInterface.get_selected_paths()[0]
+	else:
+		_blacklist_input.clear()
 
 func _on_cglf_inc_path_text_window_text_changed(new_text: String) -> void:
 	_cglf_injection_path = new_text
