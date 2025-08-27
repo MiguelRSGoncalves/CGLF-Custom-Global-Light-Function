@@ -1,6 +1,6 @@
 # CGLF — Custom Global Light Function
 
-A Godot Editor plugin that allows you to **define and manage a single global `light()` function** shared across all or chosen shaders in your project.
+Provides a manager to define and customize a single centralized custom global light() function shared across all or chosen shaders in the project.
 
 ## Features
 - Define a **global `light()` function** once and reuse it everywhere.
