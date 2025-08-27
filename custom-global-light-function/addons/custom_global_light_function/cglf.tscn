@@ -46,6 +46,7 @@ drag_and_drop_selection_enabled = false
 
 [node name="CGLF Inc Path Text Window" type="LineEdit" parent="VBoxContainer/CGLF Inc File Path"]
 layout_mode = 2
+text = "res://addons/custom_global_light_function/cglf.gd"
 placeholder_text = "CGLF Inc Path"
 emoji_menu_enabled = false
 
@@ -147,10 +148,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-item_count = 3
-item_0/text = "res://new_shader.gdshader"
-item_1/text = "res://test.gdshader"
-item_2/text = "res://test2.gdshader"
 
 [node name="Remove Blacklisted Item" type="Button" parent="VBoxContainer/Blacklist"]
 layout_mode = 2
